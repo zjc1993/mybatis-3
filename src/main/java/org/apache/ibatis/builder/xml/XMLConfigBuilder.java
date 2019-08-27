@@ -52,7 +52,9 @@ import org.apache.ibatis.type.JdbcType;
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
+  //是否已经解析过了默认为false
   private boolean parsed;
+  //parse对象默认是XPathParse
   private final XPathParser parser;
   private String environment;
   private final ReflectorFactory localReflectorFactory = new DefaultReflectorFactory();
@@ -65,6 +67,13 @@ public class XMLConfigBuilder extends BaseBuilder {
     this(reader, environment, null);
   }
 
+  /**
+   * 调用构造方法初始化该对象，
+   * 在初始化XPathParse的时候会将mybatis-config.xml解析成为一个document对象
+   * @param reader
+   * @param environment
+   * @param props
+   */
   public XMLConfigBuilder(Reader reader, String environment, Properties props) {
     this(new XPathParser(reader, true, props, new XMLMapperEntityResolver()), environment, props);
   }
@@ -81,7 +90,14 @@ public class XMLConfigBuilder extends BaseBuilder {
     this(new XPathParser(inputStream, true, props, new XMLMapperEntityResolver()), environment, props);
   }
 
+  /**
+   * 给XMLConfigBuilder对象赋值
+   * @param parser
+   * @param environment
+   * @param props
+   */
   private XMLConfigBuilder(XPathParser parser, String environment, Properties props) {
+	//调用父类的BaseBuilder构造方法初始化Configuration对象，并获取Configuration对象的typeAliasRegistry和typeHandlerRegistry
     super(new Configuration());
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
@@ -90,15 +106,26 @@ public class XMLConfigBuilder extends BaseBuilder {
     this.parser = parser;
   }
 
+  /**
+   * 开始解析XML文件将它构造成一个Configuration对象。
+   * @return
+   */
   public Configuration parse() {
+	//1.如果已经解析过则返回异常
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
+    //2.标记已经解析过
     parsed = true;
+    //3.真正的解析方法，生成一个configuration对象
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
 
+  /**
+   * 通过解析XML中的每一个元素构建一个完整的Configuration对象
+   * @param root
+   */
   private void parseConfiguration(XNode root) {
     try {
       //issue #117 read properties first
