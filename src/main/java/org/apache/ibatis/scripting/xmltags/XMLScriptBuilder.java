@@ -63,16 +63,16 @@ public class XMLScriptBuilder extends BaseBuilder {
     nodeHandlerMap.put("bind", new BindHandler());
   }
 
-  public SqlSource parseScriptNode() {
-    MixedSqlNode rootSqlNode = parseDynamicTags(context);
-    SqlSource sqlSource;
-    if (isDynamic) {
-      sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
-    } else {
-      sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
-    }
-    return sqlSource;
-  }
+	public SqlSource parseScriptNode() {
+		MixedSqlNode rootSqlNode = parseDynamicTags(context);
+		SqlSource sqlSource;
+		if (isDynamic) {
+			sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
+		} else {
+			sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
+		}
+		return sqlSource;
+	}
 
   protected MixedSqlNode parseDynamicTags(XNode node) {
     List<SqlNode> contents = new ArrayList<>();

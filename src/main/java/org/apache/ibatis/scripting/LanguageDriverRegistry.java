@@ -27,7 +27,7 @@ public class LanguageDriverRegistry {
 
   private Class<? extends LanguageDriver> defaultDriverClass;
 
-  public void register(Class<? extends LanguageDriver> cls) {
+	public void register(Class<? extends LanguageDriver> cls) {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
     }
